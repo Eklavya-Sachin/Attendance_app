@@ -23,6 +23,11 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.dispose();
     super.dispose();
   }
+   
+
+  Future<void> logIn(){
+  return logIn();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +74,10 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   const SizedBox(height: 20),
+                  GradientButton(
+                    buttonText: 'Log In',
+                    onPressed: logIn,
+                  )
                 ],
               ),
             ),
