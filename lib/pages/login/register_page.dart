@@ -1,6 +1,8 @@
+import 'package:attendance_app/auth/auth_controller.dart';
 import 'package:attendance_app/widgets/custom_text_field.dart';
 import 'package:attendance_app/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -12,7 +14,13 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
 
   final _formKey = GlobalKey<FormState>();
 
@@ -35,16 +43,27 @@ class _RegisterPageState extends State<RegisterPage> {
                         image: AssetImage("assets/signup.png"),
                         fit: BoxFit.fitWidth),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 80, horizontal: 20),
-                    child: Text(
-                      'Hello There',
-                      style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                      ),
-                      // textAlign: TextAlign.start,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 50, horizontal: 20),
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Hello There',
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Text(
+                          'Create Your Account Here',
+                          style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -91,26 +110,18 @@ class _RegisterPageState extends State<RegisterPage> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      CustomTextField(
-                        focusedColor: Colors.black,
-                        icon: const Icon(Icons.lock, color: Colors.black),
-                        obscureText: true,
-                        controller: _confirmPasswordController,
-                        hintText: 'Confirm password',
-                        validator: (value) {
-                          if (value!.length < 7) {
-                            return 'password must be same';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 20),
                       GradientButton(
                         color1: const Color.fromARGB(255, 91, 95, 99),
                         color2: const Color.fromARGB(255, 31, 31, 30),
                         buttonText: "Sign Up",
-                        onPressed: () {},
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            AuthController.instance.register(
+                              _emailController.text.trim(),
+                              _passwordController.text.trim(),
+                            );
+                          }
+                        },
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -122,7 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 fontSize: 15, color: Colors.grey[600]),
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () => Get.back(),
                             child: const Text(
                               " Sign In",
                               style: TextStyle(

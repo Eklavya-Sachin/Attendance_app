@@ -1,6 +1,10 @@
+import 'package:attendance_app/pages/login/register_page.dart';
+import 'package:attendance_app/pages/login/reset_password.dart';
 import 'package:attendance_app/widgets/custom_text_field.dart';
 import 'package:attendance_app/widgets/gradient_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,7 +17,32 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
+
   final _formKey = GlobalKey<FormState>();
+
+  void signIn() async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text(e.message.toString()),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Expanded(child: Container()),
                           InkWell(
-                            onTap: () {},
+                            onTap: () => Get.to(() => const ResetPassword()),
                             child: Text(
                               'Forget your Password?',
                               style: TextStyle(
@@ -109,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                         color1: const Color.fromARGB(255, 221, 204, 27),
                         color2: const Color.fromARGB(255, 222, 108, 210),
                         buttonText: 'Sign In',
-                        onPressed: (){},
+                        onPressed: signIn,
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -121,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                                 fontSize: 15, color: Colors.grey[600]),
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () => Get.to(() => const RegisterPage()),
                             child: const Text(
                               "Create",
                               style: TextStyle(
