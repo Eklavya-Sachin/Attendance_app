@@ -1,9 +1,10 @@
-import 'package:attendance_app/auth/auth_controller.dart';
-import 'package:attendance_app/auth/splash_screen.dart';
-import 'package:get/get.dart';
-import 'firebase_options.dart';
-import 'package:flutter/material.dart';
+import 'package:attendance_app/pages/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'auth/auth_controller.dart';
+import 'firebase_options.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,14 +16,13 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       title: 'Attendance App',
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: HomeScreen(),
+     
     );
   }
 }

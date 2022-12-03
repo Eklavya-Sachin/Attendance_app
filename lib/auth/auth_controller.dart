@@ -1,5 +1,6 @@
-import 'package:attendance_app/pages/attendance_page.dart';
+import 'package:attendance_app/pages/home_screen.dart';
 import 'package:attendance_app/pages/login/login_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,14 +23,17 @@ class AuthController extends GetxController {
       debugPrint('Login page');
       Get.offAll(() => const LoginPage());
     } else {
-      Get.offAll(() => const AttendancePage());
+      Get.offAll(() => const HomeScreen());
     }
   }
 
   void register(String email, String password) async {
     try {
       await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
+      addUserDetial(password, email);
     } catch (e) {
       Get.snackbar(
         "About User",
@@ -46,5 +50,12 @@ class AuthController extends GetxController {
         ),
       );
     }
+  }
+
+  Future addUserDetial(String password, String email) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'email': email,
+      'password': password,
+    });
   }
 }
